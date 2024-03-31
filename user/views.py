@@ -185,8 +185,8 @@ def searchjob(request):
                 jobs = jobs.filter(jobtype__icontains=jobtype)
             if location:
                 jobs = jobs.filter(location__icontains=location)
-            if req_skills:
-                jobs = jobs.filter(req_skills__name=req_skills)
+            # if req_skills:
+            #     jobs = jobs.filter(req_skills__name=req_skills)
                 # jobs = Jobs.objects.filter(req_skills=skill)
                 
             

@@ -54,7 +54,7 @@ class JobSearchForm(forms.Form):
     title = forms.CharField(required=False)
     jobtype = forms.CharField(required=False)
     location = forms.CharField(required=False)
-    req_skill = forms.CharField(required=False)
+    # req_skill = forms.CharField(required=False)
 
 # class ApplyForm(forms.Form):
 #     pass
