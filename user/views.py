@@ -235,8 +235,15 @@ def view_applications(request,job_id):
     if job.user != request.user:
         return render(request, 'company_home.html')
     applications = Application.objects.filter(job=job)
+    
+    # aap
+    app_pending =Application.objects.filter(job=job,status='P')
+    app_approved=Application.objects.filter(job=job,status='A')
+    app_rejected=Application.objects.filter(job=job,status='R')
 
-    return render(request, 'view_applications.html', {'job': job, 'applications': applications})
+    # return render(request, 'view_applications.html', {'job': job, 'applications': applications})
+    return render(request, 'view_applications.html', {'job': job, 'applications': app_pending,'app_approved':app_approved,'app_rejected':app_rejected})
+
 
 def approve_application(request, application_id,job_id):
     application = Application.objects.get(id=application_id)
