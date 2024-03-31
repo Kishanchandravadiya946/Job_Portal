@@ -1,0 +1,80 @@
+{% extends 'base2.html' %}
+{% block content %}
+<br><br>
+<div class="container">
+{% if applications %}
+
+    <table class="table table-dark table-striped">
+        <tr>
+            <th>Applicant</th>
+            <th>Applied Date</th>
+            <!-- <th>Status</th> -->
+            <th>Education</th>
+            <!-- <th></th> -->
+            <th>View Profile</th>
+            <th>  Status</th>
+            <th>Current status</th>
+            <th>Contact JobSeeker</th>
+        </tr> 
+        {% for application in applications %}
+            <tr>
+                <td>{{ application.profile.name}}</td>
+                <td>{{ application.applied_date }}</td>
+                <!-- <td>{{ application.status }}</td> -->
+                <td>{{ application.profile.education}}</td>
+                <!-- <td>{{ application.profile.resume}}</td> -->
+                <td><a href="{{ application.profile.resume.url }}" download>Download Resume</a></td>
+                <td>
+                    <div style="display: inline-block;">
+                        <form method="post" action="{% url 'approve_application'  job_id=job.id application_id=application.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success">Select</button>
+                        </form>
+                    </div>
+                    <div style="display: inline-block;">
+                        <form method="post" action="{% url 'reject_application'  job_id=job.id application_id=application.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Reject</button>
+                        </form>
+                    </div>
+                </td>
+                <td>
+                    {% if application.status == 'P' %}
+                        Pending
+                    {% elif application.status == 'A' %}
+                        Approved
+                    {% elif application.status == 'R' %}
+                        Rejected
+                    {% endif %}
+                </td>
+                <td><a href="mailto:{{application.profile.user.email}}">{{application.profile.user.email}}</a></td>
+            </tr>
+        {% endfor %}
+
+    </table>
+    {% else %} 
+        <p>No applications found for this job.</p>
+    {% endif %}
+    <iframe id="resume-frame" style="display: none;"></iframe>
+</div>
+
+{% endblock %}
+
+<!-- <script>
+    // Function to display resume content in iframe
+    function displayResume(resumeUrl) {
+        var iframe = document.getElementById('resume-frame');
+        iframe.src = resumeUrl;
+        iframe.style.display = 'block';
+    }
+
+    // Event listener for resume view links
+    var resumeLinks = document.querySelectorAll('.resume-view');
+    resumeLinks.forEach(function(link) {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+            var resumeUrl = this.getAttribute('data-resume-url');
+            displayResume(resumeUrl);
+        });
+    });
+</script> -->

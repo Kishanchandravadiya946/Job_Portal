@@ -1,0 +1,31 @@
+{% extends 'base2.html' %}
+{% block content %}
+<br><br>
+<div class="container mt-20">
+    
+    <table class="table table-dark table-striped">
+        <tr>
+            <th>Title</th>
+            <th>View</th>
+            <th>Delete Job</th>
+        </tr>
+            {% for job in company_jobs %}
+
+                <!-- <li><a href="{% url 'view_applications' job.id %}">{{ job.title }}</a></li>           -->
+            <tr>
+                <td>{{job.title}}</td>
+                <td><a href="{% url 'view_applications' job.id %}">view applications</a></td>
+                <!-- <td><a href="{% url 'delete_job' job_id=job.id%}">Delete</a></td> -->
+                <td>
+                    <form method="post" action="{% url 'delete_job' job_id=job.id%}">
+                        {%csrf_token%}
+                        <button type="submit" class="btn btn-primary">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        
+    </table>
+</div>
+
+{% endblock %}

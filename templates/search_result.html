@@ -1,0 +1,118 @@
+{% extends 'base1.html' %}
+{% block content %}
+{% load bootstrap5 %}
+{% load crispy_forms_tags %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+
+</head>
+
+<!-- <h3>View Post </h3> -->
+
+<div class="container">
+    <br>
+    <form class="d-flex my-50 " method="post" action="{% url 'search_profile' %}">
+        {% csrf_token %}
+        <input class="form-control me-2" type="search" placeholder="Search Companies here..." aria-label="Search" name="search_query">
+        <button class="btn btn-secondary" type="submit">Search</button>
+    </form>
+    <br>
+    {% for profile in profiles %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="card-title">{{ profile.name }}</h5>
+        </div>
+        <div class="card-body">
+            <p class="card-text">{{ profile.description }}</p>
+            <p class="card-text">Contact: {{ profile.contact }}</p>
+            <p class="card-text">Location: {{ profile.location }}</p>
+   
+    
+            
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-muted">No company found.</p>
+    {% endfor %}
+    <div class="row">
+        {% for job in jobs %}
+            <!-- <h3>{{ job.title }}</h3> -->
+        
+            <div class="col-md-4 gy-3">
+                <div class="card" style="width: 20rem;">
+                    <div class="card-body">
+                    <h5 class="card-title">{{ job.title }}</h5><br>
+                    <label class="card-text"><b>Salary: </b>{{ job.salary }}</label><br>
+                    <label class="card-text"><b>Location: </b>{{ job.location }}</label><br>
+                    <label class="card-text"><b>Type: </b></label>
+                    {% if job.jobtype == 'FT' %}
+                        <label >Full Time</label>
+                    {% elif job.jobtype == 'PT' %}
+                        <label >Part Time</label>
+                    {% elif job.jobtype == 'IN' %}
+                        <label >Internship</label>
+                    {% elif job.jobtype == 'FL' %}
+                        <label >Freelance</label>
+                    {% endif %}
+                    <!-- <a href="#" class="btn btn-primary">Apply</a> --><br><br>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#jobModal{{ job.id }}">
+                      View Details
+                    </button>
+                    </div>
+                </div>
+                <br>
+            </div>
+        
+        {% empty %}
+            <p>No jobs found.</p>
+        {% endfor %}
+    </div>
+    {% for job in jobs %}
+    <div class="modal fade" id="jobModal{{ job.id }}" tabindex="-1" aria-labelledby="jobModal{{ job.id }}Label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="jobModal{{ job.id }}Label">{{ job.title }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Description</p>
+                    <p>{{ job.description }}</p>
+                    <hr>
+                    <p>Location</p>
+                    <p>{{job.location}}</p>
+                    <p>Salary</p>
+                    <p>{{job.salary}}</p>
+                    <p>Job Type</p>
+                    {% if job.jobtype == 'FT' %}
+                        <span class="badge bg-primary px-2 py-2">Full Time</span>
+                    {% elif job.jobtype == 'PT' %}
+                        <span class="badge bg-success">Part Time</span>
+                    {% elif job.jobtype == 'IN' %}
+                        <span class="badge bg-warning">Internship</span>
+                    {% elif job.jobtype == 'FL' %}
+                        <span class="badge bg-secondary">Freelance</span>
+                    {% endif %}
+                    <hr>
+                    <p>Required Skills : </p>
+                    {% for skill in job.req_skills.all %}
+                        <li>{{ skill.name }}</li>
+                    {% endfor %}
+                    <!-- {{job.id}} -->
+                </div>
+                <div class="modal-footer">
+                    
+                    <form method="post" action="{% url 'apply' job_id=job.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Apply</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+{% endblock %}

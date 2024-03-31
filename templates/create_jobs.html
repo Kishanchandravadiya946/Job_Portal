@@ -1,0 +1,18 @@
+{% extends 'base2.html' %}
+{% load crispy_forms_tags %}
+
+ <h3>Create Jobs</h3>
+{% block content %}
+    <!-- <h2>{{user.username}}</h2> -->
+    <br>
+   <div class="container">
+    <h2>Enter details:</h2>
+    <form action="" method="post" enctype = "multipart/form-data">
+        {%csrf_token%}
+        {{form|crispy}}
+        <!-- {% crispy form %} -->
+        <button class="btn btn-primary" type="submit">Create</button>
+    </form>
+
+   </div>
+{% endblock %}
